@@ -1,1 +1,20 @@
-/* You can add global styles to this file, and also import other style files */
+html, body {
+    text-align: center;
+    background: linear-gradient(135deg, #990707 0%, #664963 50%, #9f0707 100%);
+    color: #ffffff; 
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content {
+  flex: 1 0 auto;
+  padding: 20px;
+}
+
+app-rodape {
+  flex-shrink: 0;
+}
