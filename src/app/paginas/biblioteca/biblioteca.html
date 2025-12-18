@@ -1,0 +1,49 @@
+<div class="container mt-4">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h1>Bibliotecas</h1>
+    <button class="btn btn-primary" (click)="openForm()">+ Nova</button>
+  </div>
+
+  <div *ngIf="showForm" style="border: 1px solid #ddd; padding: 20px; margin-bottom: 20px;">
+    <h3>{{ editingId ? 'Editar' : 'Nova' }} Biblioteca</h3>
+    <form (ngSubmit)="saveBiblioteca()" style="margin-top: 15px;">
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; margin-bottom: 5px; font-weight: 500;">Nome</label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="form.nome"
+          name="nome"
+          placeholder="Digite o nome"
+        />
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <button type="submit" class="btn btn-success">{{ editingId ? 'Atualizar' : 'Criar' }}</button>
+        <button type="button" class="btn btn-secondary" (click)="closeForm()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+
+  <div style="border: 1px solid #ddd; border-radius: 4px; overflow: hidden;">
+    <table class="table table-striped" style="margin: 0;">
+      <thead style="background-color: #f5f5f5;">
+        <tr>
+          <th style="padding: 12px;">Nome</th>
+          <th style="padding: 12px; width: 200px;">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let biblioteca of bibliotecas">
+          <td style="padding: 12px;">{{ biblioteca.nome }}</td>
+          <td style="padding: 12px;">
+            <button class="btn btn-sm btn-warning" (click)="openForm(biblioteca)" style="margin-right: 5px;">Editar</button>
+            <button class="btn btn-sm btn-danger" (click)="deleteBiblioteca(biblioteca.idBiblioteca)">Deletar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="bibliotecas.length === 0 && !showForm" style="padding: 20px; text-align: center; color: #666;">
+    Nenhuma biblioteca encontrada
+</div>

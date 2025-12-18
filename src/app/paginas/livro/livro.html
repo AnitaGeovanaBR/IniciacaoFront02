@@ -1,0 +1,82 @@
+<div class="container mt-4">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h1>Livros</h1>
+    <button class="btn btn-primary" (click)="openForm()">+ Novo</button>
+  </div>
+
+  <div *ngIf="showForm" class="card mb-3">
+    <div class="card-body">
+      <h3>{{ editingId ? 'Editar' : 'Novo' }} Livro</h3>
+      <form (ngSubmit)="saveLivro()" class="mt-3">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label">Nome *</label>
+            <input type="text" class="form-control" [class.is-invalid]="!form.nome.trim()" [(ngModel)]="form.nome" name="nome" />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Autor *</label>
+            <input type="text" class="form-control" [class.is-invalid]="!form.autor.trim()" [(ngModel)]="form.autor" name="autor" />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-3">
+            <label class="form-label">Edição</label>
+            <input type="number" class="form-control" [(ngModel)]="form.edicao" name="edicao" min="1" />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Editora</label>
+            <input type="text" class="form-control" [(ngModel)]="form.editora" name="editora" />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">ISBN</label>
+            <input type="text" class="form-control" [(ngModel)]="form.isbn" name="isbn" />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Data Publicação</label>
+            <input type="date" class="form-control" [(ngModel)]="form.dataPublicacao" name="dataPublicacao" />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Descrição</label>
+          <textarea class="form-control" [(ngModel)]="form.descricao" name="descricao" rows="3"></textarea>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-success">{{ editingId ? 'Atualizar' : 'Criar' }}</button>
+          <button type="button" class="btn btn-secondary" (click)="closeForm()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Autor</th>
+        <th>Editora</th>
+        <th>Edição</th>
+        <th>ISBN</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let livro of livros">
+        <td>{{ livro.nome }}</td>
+        <td>{{ livro.autor }}</td>
+        <td>{{ livro.editora }}</td>
+        <td>{{ livro.edicao }}</td>
+        <td>{{ livro.isbn }}</td>
+        <td>
+          <button class="btn btn-sm btn-warning" (click)="openForm(livro)">Editar</button>
+          <button class="btn btn-sm btn-danger" (click)="deleteLivro(livro.idLivro)">Deletar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="livros.length === 0 && !showForm" class="alert alert-info">
+    Nenhum livro encontrado
+  </div>
