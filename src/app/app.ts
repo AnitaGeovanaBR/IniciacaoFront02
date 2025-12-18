@@ -1,18 +1,18 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router'; 
+import { RouterOutlet } from '@angular/router';
+
 import { MenuComponent } from './components/menu/menu';
-import { rodape } from './components/rodape/rodape';
+import { RodapeComponent } from './components/rodape/rodape';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
-    CommonModule, 
-    RouterModule, 
-    MenuComponent, 
-    rodape         
+    RouterOutlet,
+    MenuComponent,
+    RodapeComponent
   ],
-  templateUrl: './app.html'
+  templateUrl: './app.html',
+  styleUrls: ['./app.css']
 })
-export class App { }
+export class App {}

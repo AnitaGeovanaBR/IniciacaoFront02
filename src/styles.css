@@ -1,7 +1,7 @@
 html, body {
-    text-align: center;
-    background: linear-gradient(135deg, #990707 0%, #664963 50%, #9f0707 100%);
-    color: #ffffff; 
+  text-align: center;
+  background: linear-gradient(1deg, #343A40 0%, #001F3F 50%, #343A40 100%);
+  color: #ffffff; 
 }
 
 .wrapper {
