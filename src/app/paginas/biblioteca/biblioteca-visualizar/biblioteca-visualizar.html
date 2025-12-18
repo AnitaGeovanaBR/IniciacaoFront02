@@ -1,0 +1,31 @@
+<div class="container mt-5">
+  <div class="card shadow-sm">
+    <div class="card-header bg-info text-white">
+      <h3 class="mb-0">Detalhes da Biblioteca</h3>
+    </div>
+    
+    <div class="card-body">
+      <div class="row mb-3">
+        <div class="col-md-3 fw-bold">ID:</div>
+        <div class="col-md-9">{{ biblioteca?.idBiblioteca }}</div> 
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-3 fw-bold">Nome:</div>
+        <div class="col-md-9">{{ biblioteca?.nome }}</div> 
+      </div>
+      <hr>
+      <div class="d-flex justify-content-start">
+        <button class="btn btn-secondary me-3" [routerLink]="['/biblioteca']">
+        Voltar para Lista
+        </button>
+  
+          <button class="btn btn-warning text-white" [routerLink]="['/biblioteca/editar', biblioteca?.idBiblioteca]">
+          Ir para Edição
+        </button>
+    </div>
+      </div>
+    </div>
+   </div>
+
+
