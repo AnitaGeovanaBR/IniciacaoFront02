@@ -41,7 +41,7 @@ export class BibliotecaEditarComponent implements OnInit {
         this.nomeBibliotecaOriginal = biblioteca.nome;
         this.nomeBiblioteca = biblioteca.nome;
         
-        // FORÇA O ANGULAR A MOSTRAR O NOME NA TELA IMEDIATAMENTE
+        // chamando para detectar as mudanças
         this.cdr.detectChanges(); 
       },
       error: (err) => console.error('Erro ao carregar:', err)
