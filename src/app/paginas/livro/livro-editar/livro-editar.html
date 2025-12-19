@@ -1,0 +1,64 @@
+<div class="container mt-5">
+  @if (nomeLivroOriginal) {
+    <div class="card shadow border-warning">
+      <header class="card-header bg-warning text-dark">
+        <h3 class="mb-0">
+          Editar Livro: <strong>{{ nomeLivroOriginal }}</strong>
+        </h3>
+      </header>
+
+      <div class="card-body">
+        <form #formEditar="ngForm" (ngSubmit)="salvarEdicao()" novalidate>
+          
+          <div class="row">
+            <div class="col-md-12 mb-3">
+              <label for="nome" class="form-label fw-bold">Nome do Livro</label>
+              <input id="nome" name="nome" type="text" class="form-control" 
+                [(ngModel)]="livro.nome" required minlength="3" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="autor" class="form-label fw-bold">Autor</label>
+              <input id="autor" name="autor" type="text" class="form-control" [(ngModel)]="livro.autor" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="edicao" class="form-label fw-bold">Edição</label>
+              <input id="edicao" name="edicao" type="text" class="form-control" [(ngModel)]="livro.edicao" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="editora" class="form-label fw-bold">Editora</label>
+              <input id="editora" name="editora" type="text" class="form-control" [(ngModel)]="livro.editora" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="isbn" class="form-label fw-bold">ISBN</label>
+              <input id="isbn" name="isbn" type="text" class="form-control" [(ngModel)]="livro.isbn" />
+            </div>
+
+            <div class="col-md-12 mb-3">
+              <label for="descricao" class="form-label fw-bold">Descrição</label>
+              <textarea id="descricao" name="descricao" class="form-control" rows="3" [(ngModel)]="livro.descricao"></textarea>
+            </div>
+
+            <div class="col-md-6 mb-4">
+              <label for="dataPublicacao" class="form-label fw-bold">Data de Publicação</label>
+              <input id="dataPublicacao" name="dataPublicacao" type="date" class="form-control" [(ngModel)]="livro.dataPublicacao" />
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-end gap-2 border-top pt-3">
+            <a class="btn btn-outline-secondary" routerLink="/livro">Cancelar</a>
+            <button type="submit" class="btn btn-success px-4" [disabled]="formEditar.invalid">
+              Salvar Alterações
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  } @else {
+    <div class="text-center mt-5">
+      <div class="spinner-border text-warning" role="status"></div>
+      <p class="text-white">Carregando dados do livro...</p>
+    </div>
+  }
+</div>

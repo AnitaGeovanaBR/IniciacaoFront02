@@ -1,65 +1,49 @@
-import { Component, OnInit } from '@angular/core'; 
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { BibliotecaService } from '../../../services/biblioteca.service';
-import { ChangeDetectorRef } from '@angular/core'; // Importando o change detector para atualizar quando detectar mudanças
 
 @Component({
   selector: 'app-biblioteca-editar',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './biblioteca-editar.html'
 })
 export class BibliotecaEditarComponent implements OnInit {
-  idBiblioteca: string = '';
+  idBiblioteca!: string;
   nomeBiblioteca: string = '';
-  nomeBibliotecaOriginal: string = ''; 
+  nomeBibliotecaOriginal: string = '';
 
   constructor(
     private service: BibliotecaService,
-    private route: ActivatedRoute,
     private router: Router,
-    private cdr: ChangeDetectorRef // Injetei o detector de mudanças
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-
-    this.route.paramMap.subscribe(params => {
-      const id = params.get('id');
-      
-      if (id) {
-        this.idBiblioteca = id;
-        this.carregarDados();
-      }
-    });
-  }
-
-  carregarDados(): void {
-    this.service.buscarPorId(this.idBiblioteca).subscribe({
-      next: (biblioteca: any) => {
-        this.nomeBibliotecaOriginal = biblioteca.nome;
-        this.nomeBiblioteca = biblioteca.nome;
-        
-        // chamando para detectar as mudanças
-        this.cdr.detectChanges(); 
-      },
-      error: (err) => console.error('Erro ao carregar:', err)
-    });
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.idBiblioteca = id;
+      this.service.buscarPorId(id).subscribe(
+        (bib: any) => {
+          this.nomeBibliotecaOriginal = bib.nome;
+          this.nomeBiblioteca = bib.nome;
+          this.cdr.detectChanges();
+        },
+        (err: any) => alert('Erro: ' + err.message)
+      );
+    }
   }
 
   salvarEdicao(): void {
-    if (!this.idBiblioteca) {
-      alert('Erro: O ID da biblioteca não foi carregado corretamente.');
-      return;
-    }
-
     this.service.atualizar(this.idBiblioteca, this.nomeBiblioteca).subscribe({
       next: () => {
         alert('Alterações salvas!');
         this.router.navigate(['/biblioteca']);
       },
-      error: (err) => alert('Erro ao salvar: ' + err.message)
+      error: (err: any) => alert('Erro ao salvar: ' + err.message)
     });
   }
 }

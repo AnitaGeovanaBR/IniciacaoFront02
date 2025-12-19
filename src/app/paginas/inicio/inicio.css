@@ -1,0 +1,44 @@
+/* Container que ocupa a tela toda */
+.inicio-container {
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)), 
+              url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-section {
+  flex-grow: 1;
+  padding: 60px 0;
+}
+
+/* Efeito Glassmorphism nos Cards */
+.bg-glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.bg-glass:hover {
+  transform: translateY(-10px);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Círculo do Ícone */
+.icon-box {
+  width: 60px;
+  height: 60px;
+}
+
+/* Ajustes de animação (opcional: requer Animate.css no index.html) */
+.animate__animated {
+  animation-duration: 1s;
+}
+
+h1 span {
+  text-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+}

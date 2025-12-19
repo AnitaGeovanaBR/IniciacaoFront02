@@ -1,0 +1,60 @@
+<div class="container mt-5">
+  <div class="card shadow-sm">
+    <div class="card-header bg-info text-white">
+      <h3 class="mb-0">Detalhes do Livro</h3>
+    </div>
+    
+    <div class="card-body">
+      <div class="row mb-3">
+        <div class="col-md-3 fw-bold">ID:</div>
+        <div class="col-md-9 text-muted">{{ livro?.idLivro }}</div> 
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-3 fw-bold">Nome:</div>
+        <div class="col-md-9">{{ livro?.nome }}</div> 
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-3 fw-bold">Autor:</div>
+        <div class="col-md-9">{{ livro?.autor }}</div> 
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-3 fw-bold">Edição:</div>
+        <div class="col-md-9">{{ livro?.edicao }}</div> 
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-3 fw-bold">Editora:</div>
+        <div class="col-md-9">{{ livro?.editora }}</div> 
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-3 fw-bold">ISBN:</div>
+        <div class="col-md-9">{{ livro?.isbn }}</div> 
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-3 fw-bold">Descrição:</div>
+        <div class="col-md-9">{{ livro?.descricao || 'Nenhuma descrição informada.' }}</div> 
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-3 fw-bold">Data de Publicação:</div>
+        <div class="col-md-9">{{ livro?.dataPublicacao | date: 'dd/MM/yyyy' }}</div> 
+      </div>
+
+      <hr>
+      <div class="d-flex justify-content-start">
+        <button class="btn btn-secondary me-3" [routerLink]="['/livro']">
+          Voltar para Lista
+        </button>
+  
+        <button class="btn btn-warning text-white" [routerLink]="['/livro/editar', livro?.idLivro]">
+          Ir para Edição
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

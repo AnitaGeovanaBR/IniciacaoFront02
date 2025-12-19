@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { BibliotecaService } from '../../services/biblioteca.service';
 
 @Component({
@@ -15,22 +15,26 @@ export class Biblioteca implements OnInit {
 
   constructor(
     private service: BibliotecaService,
-    private cdr: ChangeDetectorRef // injetando o ChangeDetectorRef para atualizar sempre em qualquer mudança
+    private router: Router,
+    private route: ActivatedRoute, 
+    private cdr: ChangeDetectorRef 
   ) {}
 
   ngOnInit(): void {
     this.carregarDados();
   }
 
+  
   carregarDados(): void {
     this.service.listarTodas().subscribe({
       next: (dados) => {
         this.listaBibliotecas = dados;
-        this.cdr.detectChanges();
+        this.cdr.detectChanges(); 
       },
-      error: err => console.error(err)
+      error: (err) => console.error('Erro ao carregar bibliotecas:', err)
     });
   }
+
 
   excluirBiblioteca(id: string): void {
     const confirmar = window.confirm('Tem certeza que deseja excluir esta biblioteca?');
@@ -39,10 +43,12 @@ export class Biblioteca implements OnInit {
     this.service.excluir(id).subscribe({
       next: () => {
         alert('Excluído com sucesso!');
-        this.carregarDados(); // ao chamar, a view será atualizada com o "detectChanges"
+        this.carregarDados();
       },
-      error: err => alert('Erro ao excluir: ' + err.message)
+      error: (err) => alert('Erro ao excluir: ' + err.message)
     });
   }
-
+  irParaDetalhes(id: string): void {
+    this.router.navigate([id], { relativeTo: this.route });
+  }
 }

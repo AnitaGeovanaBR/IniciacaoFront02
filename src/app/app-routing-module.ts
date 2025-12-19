@@ -5,6 +5,11 @@ import { BibliotecaNovoComponent } from './paginas/biblioteca/biblioteca-novo/bi
 import { BibliotecaEditarComponent } from './paginas/biblioteca/biblioteca-editar/biblioteca-editar';
 import { BibliotecaVisualizarComponent } from './paginas/biblioteca/biblioteca-visualizar/biblioteca-visualizar';
 
+import { Livro } from './paginas/livro/livro';
+import { LivroNovoComponent } from './paginas/livro/livro-novo/livro-novo';
+import { LivroEditarComponent } from './paginas/livro/livro-editar/livro-editar';
+import { LivroVisualizarComponent } from './paginas/livro/livro-visualizar/livro-visualizar';
+
 export const routes: Routes = [
   {
     path: '',
@@ -25,5 +30,21 @@ export const routes: Routes = [
   {
     path: 'biblioteca/editar/:id',
     component: BibliotecaEditarComponent
+  },
+  {
+    path: 'livro',
+    component: Livro
+  },
+  {
+    path: 'livro/novo',
+    component: LivroNovoComponent
+  },
+  {
+    path: 'livro/visualizar/:id',
+    component: LivroVisualizarComponent
+  },
+  {
+    path: 'livro/editar/:id',
+    component: LivroEditarComponent
   }
 ];
