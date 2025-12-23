@@ -1,0 +1,56 @@
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 colunas */
+    gap: 15px;
+}
+
+.full-width {
+    grid-column: 1 / -1; /* Ocupa a linha inteira */
+}
+
+input[type="text"], input[type="date"], textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+}
+input:focus, textarea:focus {
+    border-color: #007bff;
+}
+
+/* Modal form adjustments */
+.form-grid-modal {
+    display: grid;
+    grid-template-columns: 100px 1fr; /* Label + Input */
+    gap: 10px;
+    align-items: center;
+}
+.form-grid-modal label {
+    font-weight: bold;
+    text-align: right;
+    padding-right: 10px;
+}
+.form-grid-modal textarea {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Reutilizando botões */
+.btn-add, .btn-cancel, .btn-delete, .btn-view, .btn-edit, .btn-action {
+    cursor: pointer;
+    border-radius: 4px;
+    border: none;
+}
+.btn-add { background: #28a745; color: white; padding: 10px 20px; font-size: 1rem; }
+.btn-cancel { background: #6c757d; color: white; padding: 10px 20px; }
+.btn-delete { background: #dc3545; color: white; }
+.btn-view { background: #17a2b8; color: white; }
+.btn-edit { background: #ffc107; color: #333; }
+
+/* Tabela */
+.styled-table { width: 100%; border-collapse: collapse; }
+.styled-table th, .styled-table td { padding: 10px; border-bottom: 1px solid #ddd; }
+.styled-table th { background: #009879; color: white; text-align: left; }
+.btn-action { padding: 6px 10px; margin: 0 2px; color: white; }

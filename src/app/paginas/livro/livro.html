@@ -1,0 +1,92 @@
+<div class="header-section">
+    <h2>Gestão de Livros</h2>
+    <p>Administre o acervo da biblioteca.</p>
+</div>
+
+<div class="card form-card">
+    <h4 style="margin-bottom: 15px; color: #555;">Novo Livro</h4>
+    
+    <div class="form-grid">
+        <input type="text" [(ngModel)]="novoLivro.nome" placeholder="Nome do Livro *" />
+        <input type="text" [(ngModel)]="novoLivro.autor" placeholder="Autor *" />
+        <input type="text" [(ngModel)]="novoLivro.isbn" placeholder="ISBN *" />
+        <input type="text" [(ngModel)]="novoLivro.editora" placeholder="Editora" />
+        <input type="text" [(ngModel)]="novoLivro.edicao" placeholder="Edição (ex: 1ª)" />
+        <input type="date" [(ngModel)]="novoLivro.dataPublicacao" title="Data de Publicação" />
+        
+        <input type="text" [(ngModel)]="novoLivro.descricao" placeholder="Descrição breve..." class="full-width" />
+    </div>
+
+    <div style="text-align: right; margin-top: 15px;">
+        <button (click)="salvarNovoLivro()" class="btn-add">
+            + Cadastrar Livro
+        </button>
+    </div>
+</div>
+
+<div class="card table-card">
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th style="width: 80px;">ID</th> 
+          <th>Nome do Livro</th>
+          <th>Autor</th>
+          <th style="width: 180px; text-align: center;">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let livro of listaLivros; let i = index">
+          
+          <td><strong>#{{ i + 1 }}</strong></td>
+          
+          <td>
+            <span class="lib-name">{{ livro.nome }}</span>
+     
+          </td>
+          
+          <td>{{ livro.autor }}</td>
+          
+          <td style="text-align: center;">
+            <button (click)="abrirVisualizacao(livro)" class="btn-action btn-view" title="Ver">👁</button>
+            <button (click)="abrirEdicao(livro)" class="btn-action btn-edit" title="Editar">✏️</button>
+            <button (click)="abrirExclusao(livro)" class="btn-action btn-delete" title="Excluir">🗑</button>
+          </td>
+        </tr>
+        
+        <tr *ngIf="listaLivros.length === 0">
+            <td colspan="4" class="empty-row">Nenhum livro cadastrado.</td>
+        </tr>
+      </tbody>
+    </table>
+</div>
+
+<app-modal *ngIf="modoModal === 'visualizar'" titulo="Detalhes do Livro" (aoFechar)="fecharModal()">
+    <app-visualizador [dados]="itemSelecionado" [configuracao]="configVisualizacao"></app-visualizador>
+    <div style="text-align: right; margin-top: 15px;">
+        <button (click)="fecharModal()" class="btn-cancel">Fechar</button>
+    </div>
+</app-modal>
+
+<app-modal *ngIf="modoModal === 'editar'" titulo="Editar Livro" (aoFechar)="fecharModal()">
+    <div class="form-grid-modal" *ngIf="itemSelecionado">
+        <label>Nome:</label> <input type="text" [(ngModel)]="itemSelecionado.nome" />
+        <label>Autor:</label> <input type="text" [(ngModel)]="itemSelecionado.autor" />
+        <label>ISBN:</label> <input type="text" [(ngModel)]="itemSelecionado.isbn" />
+        <label>Editora:</label> <input type="text" [(ngModel)]="itemSelecionado.editora" />
+        <label>Edição:</label> <input type="text" [(ngModel)]="itemSelecionado.edicao" />
+        <label>Data:</label> <input type="date" [(ngModel)]="itemSelecionado.dataPublicacao" />
+        <label>Descrição:</label> <textarea [(ngModel)]="itemSelecionado.descricao" rows="3"></textarea>
+    </div>
+    <div style="text-align: right; margin-top: 20px;">
+        <button (click)="fecharModal()" class="btn-cancel" style="margin-right: 10px;">Cancelar</button>
+        <button (click)="salvarEdicao()" class="btn-add">Salvar</button>
+    </div>
+</app-modal>
+
+<app-modal *ngIf="modoModal === 'excluir'" titulo="Excluir Livro" (aoFechar)="fecharModal()">
+    <p>Deseja excluir o livro <strong>{{ itemSelecionado?.nome }}</strong>?</p>
+    <div style="text-align: right; margin-top: 20px;">
+        <button (click)="fecharModal()" class="btn-cancel" style="margin-right: 10px;">Cancelar</button>
+        <button (click)="confirmarExclusao()" class="btn-delete">Confirmar Exclusão</button>
+    </div>
+</app-modal>

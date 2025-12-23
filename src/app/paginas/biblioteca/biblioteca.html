@@ -1,0 +1,111 @@
+<div class="header-section">
+    <h2>Gestão de Bibliotecas</h2>
+    <p>Cadastre e administre as unidades do sistema.</p>
+</div>
+
+<div class="card form-card">
+    <div class="input-group">
+      <input 
+        type="text" 
+        [(ngModel)]="nomeNovaBiblioteca" 
+        placeholder="Nome da nova biblioteca..."
+        (keyup.enter)="salvarBiblioteca()" 
+      />
+      <button (click)="salvarBiblioteca()" class="btn-add">
+        + Adicionar
+      </button>
+    </div>
+</div>
+
+<div class="card table-card">
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th style="width: 100px;">ID (Simples)</th> 
+          <th>Nome da Biblioteca</th>
+          <th style="width: 250px; text-align: center;">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let lib of listaBibliotecas; let i = index">
+          <td>#{{ i + 1 }}</td>
+          <td>
+            <span class="lib-name">{{ lib.nome }}</span>
+          </td>
+          <td style="text-align: center;">
+            
+            <button (click)="abrirVisualizacao(lib)" class="btn-action btn-view" title="Visualizar">
+               👁
+            </button>
+
+            <button (click)="abrirEdicao(lib)" class="btn-action btn-edit" title="Editar">
+               ✏️
+            </button>
+
+            <button (click)="abrirExclusao(lib)" class="btn-action btn-delete" title="Excluir">
+               🗑
+            </button>
+
+          </td>
+        </tr>
+        <tr *ngIf="listaBibliotecas.length === 0">
+          <td colspan="3" class="empty-row">Nenhuma biblioteca cadastrada.</td>
+        </tr>
+      </tbody>
+    </table>
+</div>
+
+<app-modal 
+  *ngIf="modoModal === 'visualizar'" 
+  titulo="Detalhes da Biblioteca" 
+  (aoFechar)="fecharModal()">
+  
+  <app-visualizador 
+      [dados]="itemSelecionado" 
+      [configuracao]="configVisualizacao">
+  </app-visualizador>
+
+  <div style="text-align: right; margin-top: 15px;">
+    <button (click)="fecharModal()" class="btn-cancel">Fechar</button>
+  </div>
+
+</app-modal>
+
+
+<app-modal 
+  *ngIf="modoModal === 'editar'" 
+  titulo="Editar Biblioteca" 
+  (aoFechar)="fecharModal()">
+  
+  <div class="form-group" *ngIf="itemSelecionado">
+      <label style="font-weight: bold; display: block; margin-bottom: 5px;">Nome:</label>
+      <input 
+        type="text" 
+        [(ngModel)]="itemSelecionado.nome" 
+        class="form-control" 
+        style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;"
+      >
+  </div>
+  
+  <div style="text-align: right; margin-top: 20px;">
+      <button (click)="fecharModal()" class="btn-cancel" style="margin-right: 10px;">Cancelar</button>
+      <button (click)="salvarEdicao()" class="btn-add">Salvar Alterações</button>
+  </div>
+
+</app-modal>
+
+
+<app-modal 
+  *ngIf="modoModal === 'excluir'" 
+  titulo="Confirmar Exclusão" 
+  (aoFechar)="fecharModal()">
+  
+  <p>Tem certeza que deseja remover a biblioteca <strong>{{ itemSelecionado?.nome }}</strong>?</p>
+  <p style="color: #666; font-size: 0.9em;">Esta ação é irreversível.</p>
+  
+  <div style="text-align: right; margin-top: 20px;">
+      <button (click)="fecharModal()" class="btn-cancel" style="margin-right: 10px;">Cancelar</button>
+      <button (click)="confirmarExclusao()" class="btn-delete">Sim, Excluir</button>
+  </div>
+
+</app-modal>
