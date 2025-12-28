@@ -9,7 +9,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
         
         <div class="modal-header">
           <h3>{{ titulo }}</h3>
-          <button class="btn-close" (click)="fechar()">X</button>
         </div>
 
         <div class="modal-body">
@@ -26,16 +25,13 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
       display: flex; justify-content: center; align-items: center;
     }
     .modal-content {
-      background: white; padding: 20px; border-radius: 8px;
+      background: white; padding: 25px; border-radius: 15px;
       width: 500px; max-width: 90%;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      box-shadow: 20px 20px 20px 20px rgba(0, 0, 0, 0.36);
     }
     .modal-header {
       display: flex; justify-content: space-between; align-items: center;
       border-bottom: 1px solid #ddd; margin-bottom: 15px;
-    }
-    .btn-close {
-      background: none; border: none; font-size: 1.2rem; cursor: pointer;
     }
   `]
 })

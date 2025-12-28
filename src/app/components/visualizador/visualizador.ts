@@ -12,8 +12,8 @@ import { Component, Input } from '@angular/core';
     </div>
   `,
   styles: [`
-    .detalhe-item { margin-bottom: 10px; font-size: 1.1rem; border-bottom: 1px dashed #eee; padding-bottom: 5px; }
-    strong { color: #555; margin-right: 5px; }
+    .detalhe-item { margin-bottom: 15px; font-size: 1.3rem; border-bottom: 5px dashed #eee; padding-bottom: 5px; }
+    strong { color: #555; margin-right: 10px; }
   `]
 })
 export class VisualizadorComponent {

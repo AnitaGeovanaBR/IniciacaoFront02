@@ -1,31 +1,61 @@
-<div class="header-section">
+<div class="titulo-pagina-livro">
     <h2>Gestão de Livros</h2>
     <p>Administre o acervo da biblioteca.</p>
 </div>
-
-<div class="card form-card">
-    <h4 style="margin-bottom: 15px; color: #555;">Novo Livro</h4>
     
-    <div class="form-grid">
-        <input type="text" [(ngModel)]="novoLivro.nome" placeholder="Nome do Livro *" />
-        <input type="text" [(ngModel)]="novoLivro.autor" placeholder="Autor *" />
-        <input type="text" [(ngModel)]="novoLivro.isbn" placeholder="ISBN *" />
-        <input type="text" [(ngModel)]="novoLivro.editora" placeholder="Editora" />
-        <input type="text" [(ngModel)]="novoLivro.edicao" placeholder="Edição (ex: 1ª)" />
-        <input type="date" [(ngModel)]="novoLivro.dataPublicacao" title="Data de Publicação" />
-        
-        <input type="text" [(ngModel)]="novoLivro.descricao" placeholder="Descrição breve..." class="full-width" />
-    </div>
-
-    <div style="text-align: right; margin-top: 15px;">
-        <button (click)="salvarNovoLivro()" class="btn-add">
-            + Cadastrar Livro
-        </button>
-    </div>
+<div class="card-header-toggle" (click)="toggleFormulario()" style="cursor: pointer; display: inline-flex; align-items: center;">
+    <h4 style="margin: 3px; color: #28a745;">Novo Livro</h4>
+    
+    <span class="arrow" [class.open]="formularioAberto">
+        <i class="fas" [ngClass]="formularioAberto ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+    </span>
 </div>
 
-<div class="card table-card">
-    <table class="styled-table">
+@if (formularioAberto) {
+<div class="form-container-animado">
+    <form [formGroup]="livroForm" class="form-grid">
+        <input type="text" formControlName="nome" placeholder="Nome do Livro *" />
+        <input type="text" formControlName="autor" placeholder="Autor *" />
+        <input type="text" formControlName="editora" placeholder="Editora" />
+        <input type="text" formControlName="edicao" placeholder="Edição (ex: 1ª)" />
+        <input type="text" formControlName="isbn" placeholder="ISBN *" />
+        <input type="date" formControlName="dataPublicacao" title="Data de Publicação" />
+        <input type="text" formControlName="descricao" placeholder="Descrição breve..." class="full-width" />
+        
+        @if (livroForm.get('nome')?.errors?.['required'] && livroForm.get('nome')?.touched) {
+            <small class="error-message">O nome é obrigatório.</small>
+        }
+        @if (livroForm.get('autor')?.invalid && livroForm.get('autor')?.touched) {
+            <small class="error-message">O autor é obrigatório.</small>
+        }
+        @if (livroForm.get('isbn')?.errors?.['required'] && livroForm.get('isbn')?.touched) {
+            <small class="error-message">O ISBN é obrigatório.</small>
+        }
+        @if (livroForm.get('isbn')?.errors?.['pattern'] && livroForm.get('isbn')?.touched) {
+            <small class="error-message">Formato de ISBN inválido (apenas números e traços).</small>
+        }
+        @if (livroForm.get('editora')?.errors?.['required'] && livroForm.get('editora')?.touched) {
+            <small class="error-message">A editora é obrigatória.</small>
+        }
+        @if (livroForm.get('edicao')?.errors?.['required'] && livroForm.get('edicao')?.touched) {
+            <small class="error-message">A edição é obrigatória.</small>
+        }
+        @if (livroForm.get('dataPublicacao')?.errors?.['required'] && livroForm.get('dataPublicacao')?.touched) {
+            <small class="error-message">A data de publicação é obrigatória.</small>
+        }
+        @if (livroForm.get('descricao')?.errors?.['required'] && livroForm.get('descricao')?.touched) {
+            <small class="error-message">A descrição é obrigatória.</small>
+        }
+      </form>
+
+    <div style="text-align: right; margin-top: 0px; margin-bottom: 0px; margin-right: 25px;">
+        <button (click)="salvarNovoLivro()" class="btn-add">Salvar</button>
+    </div>
+</div>
+}
+
+<div class="card table-card" style="padding-right: 25px; padding-left: 25px;border: none;">
+    <table class="styled-table" >
       <thead>
         <tr>
           <th style="width: 80px;">ID</th> 
@@ -35,58 +65,61 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let livro of listaLivros; let i = index">
-          
+        @for (livro of listaLivros; track livro.idLivro; let i = $index) {
+        <tr>
           <td><strong>#{{ i + 1 }}</strong></td>
-          
-          <td>
-            <span class="lib-name">{{ livro.nome }}</span>
-     
-          </td>
-          
+          <td><span class="lib-name">{{ livro.nome }}</span></td>
           <td>{{ livro.autor }}</td>
-          
           <td style="text-align: center;">
             <button (click)="abrirVisualizacao(livro)" class="btn-action btn-view" title="Ver">👁</button>
             <button (click)="abrirEdicao(livro)" class="btn-action btn-edit" title="Editar">✏️</button>
             <button (click)="abrirExclusao(livro)" class="btn-action btn-delete" title="Excluir">🗑</button>
           </td>
         </tr>
-        
-        <tr *ngIf="listaLivros.length === 0">
-            <td colspan="4" class="empty-row">Nenhum livro cadastrado.</td>
-        </tr>
+        } @empty {
+            <tr>
+                <td colspan="4" class="empty-row">Nenhum livro cadastrado.</td>
+            </tr>
+        }
       </tbody>
     </table>
 </div>
 
-<app-modal *ngIf="modoModal === 'visualizar'" titulo="Detalhes do Livro" (aoFechar)="fecharModal()">
+@if (modoModal === 'visualizar') {
+<app-modal titulo="Detalhes do Livro" (aoFechar)="fecharModal()">
     <app-visualizador [dados]="itemSelecionado" [configuracao]="configVisualizacao"></app-visualizador>
     <div style="text-align: right; margin-top: 15px;">
         <button (click)="fecharModal()" class="btn-cancel">Fechar</button>
     </div>
 </app-modal>
+}
 
-<app-modal *ngIf="modoModal === 'editar'" titulo="Editar Livro" (aoFechar)="fecharModal()">
-    <div class="form-grid-modal" *ngIf="itemSelecionado">
-        <label>Nome:</label> <input type="text" [(ngModel)]="itemSelecionado.nome" />
-        <label>Autor:</label> <input type="text" [(ngModel)]="itemSelecionado.autor" />
-        <label>ISBN:</label> <input type="text" [(ngModel)]="itemSelecionado.isbn" />
-        <label>Editora:</label> <input type="text" [(ngModel)]="itemSelecionado.editora" />
-        <label>Edição:</label> <input type="text" [(ngModel)]="itemSelecionado.edicao" />
-        <label>Data:</label> <input type="date" [(ngModel)]="itemSelecionado.dataPublicacao" />
-        <label>Descrição:</label> <textarea [(ngModel)]="itemSelecionado.descricao" rows="3"></textarea>
+@if (modoModal === 'editar') {
+<app-modal titulo="Editar Livro" (aoFechar)="fecharModal()">
+    @if (itemSelecionado) {
+    <div class="form-grid-modal" [formGroup]="livroForm">
+        <label>Nome:</label> <input type="text"           formControlName="nome" />
+        <label>Autor:</label> <input type="text"          formControlName="autor" />
+        <label>ISBN:</label> <input type="text"           formControlName="isbn" />
+        <label>Editora:</label> <input type="text"        formControlName="editora" />
+        <label>Edição:</label> <input type="text"         formControlName="edicao" />
+        <label>Data:</label> <input type="date"           formControlName="dataPublicacao" />
+        <label>Descrição:</label> <textarea               formControlName="descricao" rows="3"></textarea>
     </div>
+    }
     <div style="text-align: right; margin-top: 20px;">
         <button (click)="fecharModal()" class="btn-cancel" style="margin-right: 10px;">Cancelar</button>
-        <button (click)="salvarEdicao()" class="btn-add">Salvar</button>
+        <button (click)="salvarEdicao()" class="btn-add" [disabled]="livroForm.invalid">Salvar</button>
     </div>
 </app-modal>
+}
 
-<app-modal *ngIf="modoModal === 'excluir'" titulo="Excluir Livro" (aoFechar)="fecharModal()">
-    <p>Deseja excluir o livro <strong>{{ itemSelecionado?.nome }}</strong>?</p>
-    <div style="text-align: right; margin-top: 20px;">
-        <button (click)="fecharModal()" class="btn-cancel" style="margin-right: 10px;">Cancelar</button>
-        <button (click)="confirmarExclusao()" class="btn-delete">Confirmar Exclusão</button>
+@if (modoModal === 'excluir') {
+<app-modal titulo="Deletar Livro" (aoFechar)="fecharModal()">
+    <p style="font-size: 20px;">Deseja excluir o livro <strong>{{ itemSelecionado?.nome }}</strong>?</p>
+    <div style="text-align: right; margin-top: 25px; margin-bottom: 10px;">
+        <button (click)="fecharModal()" class="btn-cancel" style="margin-right: 15px;padding: 10px;">Cancelar</button>
+        <button (click)="confirmarExclusao()" class="btn-delete" style="padding: 10px;">Confirmar</button>
     </div>
 </app-modal>
+}

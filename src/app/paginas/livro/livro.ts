@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { Livro, CriarLivroCommand } from '../../models/api-models';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-livro',
@@ -10,35 +11,43 @@ import { Livro, CriarLivroCommand } from '../../models/api-models';
 })
 export class LivroComponent implements OnInit {
   listaLivros: Livro[] = [];
-
   itemSelecionado: Livro | null = null;
   modoModal: 'visualizar' | 'editar' | 'excluir' | null = null;
 
-  novoLivro: CriarLivroCommand = {
-    nome: '',
-    autor: '',
-    edicao: '',
-    editora: '',
-    isbn: '',
-    descricao: '',
-    dataPublicacao: ''
-  };
+  livroForm: FormGroup;
+
+  formularioAberto: boolean = false; 
+
+toggleFormulario() {
+  this.formularioAberto = !this.formularioAberto;
+}
 
   configVisualizacao = [
-    { rotulo: 'ID do Sistema', chave: 'idLivro' },
-    { rotulo: 'Título', chave: 'nome' },
-    { rotulo: 'Autor', chave: 'autor' },
-    { rotulo: 'ISBN', chave: 'isbn' },
-    { rotulo: 'Editora', chave: 'editora' },
-    { rotulo: 'Edição', chave: 'edicao' },
-    { rotulo: 'Publicação', chave: 'dataPublicacao' },
-    { rotulo: 'Descrição', chave: 'descricao' }
+    { rotulo: 'ID do Sistema',       chave: 'idLivro'},
+    { rotulo: 'Título',                 chave: 'nome'},
+    { rotulo: 'Autor',                 chave: 'autor'},
+    { rotulo: 'ISBN',                   chave: 'isbn'},
+    { rotulo: 'Editora',             chave: 'editora'},
+    { rotulo: 'Edição',               chave: 'edicao'},
+    { rotulo: 'Publicação',   chave: 'dataPublicacao'},
+    { rotulo: 'Descrição',         chave: 'descricao'}
   ];
 
   constructor(
     private apiService: ApiService,
-    private cdr: ChangeDetectorRef
-  ) {}
+    private cdr: ChangeDetectorRef,
+    private fb: FormBuilder
+  ) {
+    this.livroForm = this.fb.group({
+      nome:           ['', Validators.required],
+      autor:          ['', Validators.required],
+      isbn:           ['', [Validators.required, Validators.pattern(/^[0-9-]+$/)]],
+      editora:        ['', Validators.required],
+      edicao:         ['', Validators.required],
+      dataPublicacao: ['', Validators.required],
+      descricao:      ['', Validators.required]
+    });
+    }
 
   ngOnInit() {
     this.carregarLivros();
@@ -55,39 +64,47 @@ export class LivroComponent implements OnInit {
   }
 
   salvarNovoLivro() {
-    if (!this.novoLivro.nome || !this.novoLivro.autor || !this.novoLivro.isbn) {
-      alert('Preencha pelo menos Nome, Autor e ISBN.');
+    if (this.livroForm.invalid) {
+      this.livroForm.markAllAsTouched();
+      this.cdr.detectChanges();
       return;
     }
 
-    this.apiService.criarLivro(this.novoLivro).subscribe({
+    this.apiService.criarLivro(this.livroForm.value).subscribe({
       next: () => {
-        console.log('Livro criado');
-        this.limparFormulario();
+        this.livroForm.reset();
         this.carregarLivros();
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error(err);
-        alert('Erro ao cadastrar livro.');
+        console.error('Erro ao cadastrar livro.', err);
       }
     });
   }
-
-  limparFormulario() {
-    this.novoLivro = {
-      nome: '', autor: '', edicao: '', editora: '', 
-      isbn: '', descricao: '', dataPublicacao: ''
-    };
-  }
-
   abrirVisualizacao(item: Livro) {
     this.itemSelecionado = item;
     this.modoModal = 'visualizar';
+    const itemFormatado = { ...item }
+      if (itemFormatado.dataPublicacao) {
+          const data = new Date(itemFormatado.dataPublicacao);
+        itemFormatado.dataPublicacao = data.toLocaleDateString('pt-BR');
+      }   
+  this.itemSelecionado = itemFormatado;
+  this.modoModal = 'visualizar';
+    
   }
 
   abrirEdicao(item: Livro) {
     this.itemSelecionado = { ...item }; 
+    this.livroForm.patchValue(this.itemSelecionado);
+    const dadosParaFormulario = { ...item };
+
+    if (item.dataPublicacao) {
+      dadosParaFormulario.dataPublicacao = new Date(item.dataPublicacao)
+        .toISOString()
+        .split('T')[0];
+    }
+    this.livroForm.patchValue(dadosParaFormulario);
     this.modoModal = 'editar';
   }
 
@@ -99,27 +116,39 @@ export class LivroComponent implements OnInit {
   fecharModal() {
     this.itemSelecionado = null;
     this.modoModal = null;
+    this.livroForm.reset()
   }
 
   salvarEdicao() {
-    if (!this.itemSelecionado) return;
-      const command: CriarLivroCommand = {
-        nome: this.itemSelecionado.nome,
-        autor: this.itemSelecionado.autor,
-        edicao: this.itemSelecionado.edicao,
-        editora: this.itemSelecionado.editora,
-        isbn: this.itemSelecionado.isbn,
-        descricao: this.itemSelecionado.descricao,
-        dataPublicacao: this.itemSelecionado.dataPublicacao
-      };
+  if (!this.itemSelecionado) return;
 
-    this.apiService.atualizarLivro(this.itemSelecionado.idLivro, command).subscribe({
-      next: () => {
-        this.carregarLivros();
-        this.fecharModal();
-        this.cdr.detectChanges();
-      },
-      error: (err) => alert('Erro ao atualizar livro.')
+  if (this.livroForm.invalid) {
+    this.livroForm.markAllAsTouched();
+    return;
+  }
+ 
+  const dadosDoFormulario = this.livroForm.value;
+
+  const command: CriarLivroCommand = {
+    nome: dadosDoFormulario.nome,
+    autor: dadosDoFormulario.autor,
+    edicao: dadosDoFormulario.edicao,
+    editora: dadosDoFormulario.editora,
+    isbn: dadosDoFormulario.isbn,
+    descricao: dadosDoFormulario.descricao,
+    dataPublicacao: dadosDoFormulario.dataPublicacao
+  };
+
+  this.apiService.atualizarLivro(this.itemSelecionado.idLivro, command).subscribe({
+    next: () => {
+      this.carregarLivros();
+      this.fecharModal();
+      this.cdr.detectChanges();
+    },
+    error: (err) => {
+      console.error(err);
+      alert('Erro ao atualizar livro.');
+    }
     });
   }
 

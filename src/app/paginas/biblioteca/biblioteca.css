@@ -1,168 +1,139 @@
-/* Container Geral */
-.page-container {
-    max-width: 900px;
-    margin: 40px auto;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    padding: 0 20px;
+ 
+ .titulo-pagina-livro {
+    max-width: 100%;  
+    margin: 25px;
+    border: 10px solid #636a71;  
+    border-radius: 35px;
+    padding: 30px;
+    text-align: center;
+    background-color: #212529;
+    
+font-family: "Julius Sans One", sans-serif;
+font-weight: 700;
+color: #ffffff;
+text-transform: uppercase;
 }
-
-/* Cabeçalho */
-.header-section h2 {
-    color: #333;
-    margin-bottom: 5px;
+.card-header-toggle {
+    gap: 5px;
+    transition: background-color 3s;
+    margin-left: 25px;
+    margin-bottom: 0px;
+    padding: 5px;
+    border-radius: 25px;
+    border: 5px solid #d7dce1; 
+    background-color: #94eba8;
+    
+  font-family: "Racing Sans One", sans-serif;
 }
-.header-section p {
-    color: #777;
-    margin-top: 0;
-    margin-bottom: 30px;
+.card-header-toggle:hover {
+    background-color: #28a745; 
 }
-
-/* Cards (Fundo Branco com Sombra) */
-.card {
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    padding: 20px;
-    margin-bottom: 30px;
-}
-
-/* Formulário */
-.input-group {
-    display: flex;
-    gap: 15px;
-}
-
-input[type="text"] {
-    flex-grow: 1;
-    padding: 12px 15px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
+.arrow {
     font-size: 1rem;
-    outline: none;
-    transition: border-color 0.3s;
+    color: #28a745; 
+    transition: transform 0.3s ease;
+    margin: 7px;
 }
-
-input[type="text"]:focus {
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 15px;  
+    align-items: center;
+    margin: 25px;    
+}
+.full-width {
+    grid-column: 1 / -1; 
+    width: 100%;
+}
+input[type="text"], input[type="date"], textarea {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 15px;
+    outline: none;
+}
+input:focus, textarea:focus {
     border-color: #007bff;
 }
-
-/* Botão Adicionar e Salvar (Verde) */
-.btn-add {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 10px 25px; /* Ajustei ligeiramente o padding vertical */
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
-    font-size: 1rem;
-}
-.btn-add:hover { background-color: #218838; }
-
-/* Botão Cancelar (Cinza - para Modais) */
-.btn-cancel {
-    background-color: #6c757d;
-    color: white;
-    border: none;
-    padding: 10px 25px;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
-    font-size: 1rem;
-}
-.btn-cancel:hover { background-color: #545b62; }
-
-/* Tabela Estilizada */
-.styled-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.styled-table thead tr {
-    background-color: #009879;
-    color: #ffffff;
-    text-align: left;
-}
-
-.styled-table th, .styled-table td {
-    padding: 12px 15px;
-    vertical-align: middle; /* Alinha o conteúdo verticalmente */
-}
-
-.styled-table tbody tr {
-    border-bottom: 1px solid #dddddd;
-    transition: background 0.2s;
-}
-
-.styled-table tbody tr:nth-of-type(even) {
-    background-color: #f3f3f3;
-}
-
-.styled-table tbody tr:hover {
-    background-color: #f1f1f1;
-}
-
-.styled-table tbody tr:last-of-type {
-    border-bottom: 2px solid #009879;
-}
-
-/* Detalhes nas células */
-.lib-name {
-    display: block;
-    font-weight: bold;
-    color: #333;
-}
-.lib-id-full {
-    font-size: 0.75em;
-    color: #999;
-    font-family: monospace;
-}
-
-/* --- NOVOS ESTILOS PARA BOTÕES DE AÇÃO --- */
-
-.btn-action {
-    border: none;
-    padding: 8px 12px;
-    margin: 0 4px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1rem;
-    color: white;
-    transition: opacity 0.2s, transform 0.1s;
-    display: inline-flex;
+.form-grid-modal {
+    display: grid;
+    grid-template-columns: 100px 1fr; 
+    gap: 15px;
     align-items: center;
-    justify-content: center;
 }
-
-.btn-action:hover {
-    opacity: 0.85;
-    transform: translateY(-1px);
+.form-grid-modal label {
+    font-weight: bold;
+    text-align: right;
+    padding-right: 10px;
 }
-
-/* Visualizar (Azul) */
-.btn-view {
-    background-color: #17a2b8;
+.form-grid-modal textarea {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
-
-/* Editar (Amarelo) */
-.btn-edit {
-    background-color: #ffc107;
-    color: #333; /* Texto escuro para melhor leitura no amarelo */
+.btn-add, .btn-cancel, .btn-delete, .btn-view, .btn-edit, .btn-action {
+    cursor: pointer;
+    border-radius: 15px;
 }
-
-/* Excluir (Vermelho) - Atualizado */
-.btn-delete {
-    background-color: #dc3545;
+.btn-add { 
+    background: #28a745; 
+    color: white; 
+    padding: 10px; 
+    font-size: 1rem; 
+    border: 5px solid #d7dce1;
+}
+.btn-cancel { 
+    background: #6c757d; 
+    color: white; 
+    padding: 10px; 
+    font-size: 1rem;
+    border: 5px solid #d7dce1;
+}
+.btn-delete { 
+    background: #ff0019; 
+    color: white; 
+    border: 5px solid #d7dce1;
+}
+.btn-view { 
+    background: #10b6cf; 
     color: white;
-    border: none; /* Remove a borda do estilo antigo */
+    border: 5px solid #d7dce1; 
 }
-
-/* Linha vazia da tabela */
-.empty-row {
-    text-align: center;
-    color: #888;
-    padding: 30px;
-    font-style: italic;
+.btn-edit { 
+    background: #fffb00; 
+    color: #333;
+    border: 5px solid #d7dce1; 
+}
+.btn-action { 
+    padding: 3px ; 
+    margin:  2px; 
+    color: white; 
+}
+.styled-table {
+     width: 100%; 
+     border-collapse: collapse;
+     border: 3px solid #212529;
+     margin-top: 25px; 
+     margin-bottom: 50%;
+}
+.styled-table th, .styled-table td { 
+    padding: 7px ; 
+    border: 3px solid #d7dce1; 
+}
+.styled-table th { 
+    background: #636a71; 
+    color: rgb(255, 255, 255); 
+    text-align: left;
+    padding: 15px; 
+}
+.error-message {
+    color: #ff0000;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    margin-bottom: 0px;
+    display: block;
+}
+input.ng-invalid.ng-touched {
+    border: 1px solid #ff0019;
+    background-color: hsla(0, 100%, 90%, 0.664); 
 }

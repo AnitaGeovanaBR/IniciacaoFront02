@@ -1,62 +1,68 @@
-<div class="header-section">
+<div class="titulo-pagina-livro">
     <h2>Gestão de Bibliotecas</h2>
     <p>Cadastre e administre as unidades do sistema.</p>
 </div>
-
-<div class="card form-card">
-    <div class="input-group">
-      <input 
-        type="text" 
-        [(ngModel)]="nomeNovaBiblioteca" 
-        placeholder="Nome da nova biblioteca..."
-        (keyup.enter)="salvarBiblioteca()" 
-      />
-      <button (click)="salvarBiblioteca()" class="btn-add">
-        + Adicionar
-      </button>
-    </div>
+    
+<div class="card-header-toggle" (click)="toggleFormulario()" style="cursor: pointer; display: inline-flex; align-items: center;">
+    <h4 style="margin: 3px; color: #28a745;">Nova Biblioteca</h4>
+    <span class="arrow" [class.open]="formularioAberto">
+        <i class="fas" [ngClass]="formularioAberto ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+    </span>
 </div>
 
-<div class="card table-card">
-    <table class="styled-table">
-      <thead>
-        <tr>
-          <th style="width: 100px;">ID (Simples)</th> 
-          <th>Nome da Biblioteca</th>
-          <th style="width: 250px; text-align: center;">Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let lib of listaBibliotecas; let i = index">
-          <td>#{{ i + 1 }}</td>
-          <td>
-            <span class="lib-name">{{ lib.nome }}</span>
-          </td>
-          <td style="text-align: center;">
+@if (formularioAberto) {
+<div class="form-container-animado">
+    <form [formGroup]="bibliotecaForm" class="form-grid">
+        <div class="full-width">
+            <input type="text" formControlName="nome" placeholder="Nome da Biblioteca *" />
             
-            <button (click)="abrirVisualizacao(lib)" class="btn-action btn-view" title="Visualizar">
-               👁
-            </button>
+            @if (bibliotecaForm.get('nome')?.invalid && bibliotecaForm.get('nome')?.touched) {
+                <small class="error-message">
+                    O nome da biblioteca é obrigatório.
+                </small>
+            }
+        </div>
+    </form>
 
-            <button (click)="abrirEdicao(lib)" class="btn-action btn-edit" title="Editar">
-               ✏️
-            </button>
+    <div style="text-align: right; margin-top: 10px; margin-right: 25px;">
+        <button (click)="salvarBiblioteca()" class="btn-add">
+             Salvar 
+        </button>
+    </div>
+</div>
+}
 
-            <button (click)="abrirExclusao(lib)" class="btn-action btn-delete" title="Excluir">
-               🗑
-            </button>
-
-          </td>
-        </tr>
-        <tr *ngIf="listaBibliotecas.length === 0">
-          <td colspan="3" class="empty-row">Nenhuma biblioteca cadastrada.</td>
-        </tr>
-      </tbody>
+<div class="card table-card" style="padding-right: 25px; padding-left: 25px; border: none;">
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th style="width: 80px;">ID</th> 
+                <th>Nome da Biblioteca</th>
+                <th style="width: 180px; text-align: center;">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (lib of listaBibliotecas; track lib.idBiblioteca; let i = $index) {
+            <tr>
+                <td><strong>#{{ i + 1 }}</strong></td>
+                <td><span class="lib-name">{{ lib.nome }}</span></td>
+                <td style="text-align: center;">
+                    <button (click)="abrirVisualizacao(lib)" class="btn-action btn-view" title="Ver">👁</button>
+                    <button (click)="abrirEdicao(lib)" class="btn-action btn-edit" title="Editar">✏️</button>
+                    <button (click)="abrirExclusao(lib)" class="btn-action btn-delete" title="Excluir">🗑</button>
+                </td>
+            </tr>
+            } @empty {
+            <tr>
+                <td colspan="3" class="empty-row">Nenhuma biblioteca cadastrada.</td>
+            </tr>
+            }
+        </tbody>
     </table>
 </div>
 
+@if (modoModal === 'visualizar') {
 <app-modal 
-  *ngIf="modoModal === 'visualizar'" 
   titulo="Detalhes da Biblioteca" 
   (aoFechar)="fecharModal()">
   
@@ -68,44 +74,34 @@
   <div style="text-align: right; margin-top: 15px;">
     <button (click)="fecharModal()" class="btn-cancel">Fechar</button>
   </div>
-
 </app-modal>
+}
 
+@if (modoModal === 'editar') {
+<app-modal titulo="Editar Biblioteca" (aoFechar)="fecharModal()">
+    @if (itemSelecionado) {
+    <div class="form-grid-modal" [formGroup]="bibliotecaForm">
+        <label style="font-size: 20px;">Nome:</label> 
+        <input type="text" formControlName="nome"/>
+    </div>
+    }
+    
+    <div style="text-align: right; margin-top: 20px;">
+        <button (click)="fecharModal()" class="btn-cancel" style="margin-right: 10px;">Cancelar</button>
+        <button (click)="salvarEdicao()" class="btn-add" [disabled]="bibliotecaForm.invalid">Salvar</button>
+    </div>
+</app-modal>
+}
 
+@if (modoModal === 'excluir') {
 <app-modal 
-  *ngIf="modoModal === 'editar'" 
-  titulo="Editar Biblioteca" 
+  titulo="Deletar Biblioteca" 
   (aoFechar)="fecharModal()">
   
-  <div class="form-group" *ngIf="itemSelecionado">
-      <label style="font-weight: bold; display: block; margin-bottom: 5px;">Nome:</label>
-      <input 
-        type="text" 
-        [(ngModel)]="itemSelecionado.nome" 
-        class="form-control" 
-        style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;"
-      >
-  </div>
-  
-  <div style="text-align: right; margin-top: 20px;">
-      <button (click)="fecharModal()" class="btn-cancel" style="margin-right: 10px;">Cancelar</button>
-      <button (click)="salvarEdicao()" class="btn-add">Salvar Alterações</button>
-  </div>
-
+  <p style="font-size: 20px;">Deseja excluir a biblioteca <strong>{{ itemSelecionado?.nome }}</strong>?</p>
+  <div style="text-align: right; margin-top: 25px; margin-bottom: 10px;">
+        <button (click)="fecharModal()" class="btn-cancel" style="margin-right: 15px;padding: 10px;">Cancelar</button>
+        <button (click)="confirmarExclusao()" class="btn-delete" style="padding: 10px;">Confirmar</button>
+    </div>
 </app-modal>
-
-
-<app-modal 
-  *ngIf="modoModal === 'excluir'" 
-  titulo="Confirmar Exclusão" 
-  (aoFechar)="fecharModal()">
-  
-  <p>Tem certeza que deseja remover a biblioteca <strong>{{ itemSelecionado?.nome }}</strong>?</p>
-  <p style="color: #666; font-size: 0.9em;">Esta ação é irreversível.</p>
-  
-  <div style="text-align: right; margin-top: 20px;">
-      <button (click)="fecharModal()" class="btn-cancel" style="margin-right: 10px;">Cancelar</button>
-      <button (click)="confirmarExclusao()" class="btn-delete">Sim, Excluir</button>
-  </div>
-
-</app-modal>
+}
